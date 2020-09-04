@@ -1,36 +1,35 @@
 import React, { useContext, useEffect } from "react"
-import { AnimalContext } from "./AnimalProvider"
 import { Animal } from "./Animal"
 import "./Animals.css"
+import { AnimalContext } from "./AnimalProvider"
+import { LocationContext } from "../location/LocationProvider"
+import { CustomerContext } from "../customer/CustomerProvider"
 
 
 export const AnimalList = () => {
     // This state changes when `getAnimals()` is invoked below
     const { animals, getAnimals } = useContext(AnimalContext)
+    const { locations, getLocations } = useContext(LocationContext)
+    const { customers, getCustomers } = useContext(CustomerContext)
 
-    /*
-        What's the effect this is responding to? Component was
-        "mounted" to the DOM. React renders blank HTML first,
-        then gets the data, then re-renders.
-    */
     useEffect(() => {
-        console.log("animalList: Initial render before data")
         getAnimals()
+        getLocations()
+        getCustomers()
     },[])
-
-    /*
-        This effect is solely for learning purposes. The effect
-        it is responding to is that the animal state changed.
-    */
-    useEffect(() => {
-        console.log("animalList: animal state changed")
-        console.log(animals)
-    }, [animals])
 
     return (
         <div className="animals">
         {
-            animals.map(animalObject => <Animal key={animalObject.id} animal={animalObject} />)
+            animals.map(animalObject => {
+                const owner = customers.find(c => c.id === animalObject.customerId) || {}
+                const clinic = locations.find(loc => loc.id === animalObject.locationId) || {}
+                
+              return <Animal key={animalObject.id} 
+                            animal={animalObject} 
+                            location={clinic} 
+                            customer={owner} />
+            })
         }
         </div>
     )

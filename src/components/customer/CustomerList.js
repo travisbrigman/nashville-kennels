@@ -10,7 +10,7 @@ export const CustomerList = () => {
 
     useEffect(() => {
         getCustomers()
-    },[getCustomers])
+    },[])
 
     return (
         <div className="customers">
