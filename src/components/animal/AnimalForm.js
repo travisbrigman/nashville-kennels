@@ -7,19 +7,20 @@ import "./Animals.css"
 export const AnimalForm = (props) => {
      const { addAnimal } = useContext(AnimalContext)
     const { locations, getLocations } = useContext(LocationContext)
-    const { animals, getAnimals } = useContext(AnimalContext)
     const { customers, getCustomers } = useContext(CustomerContext)
 
     const name = useRef(null)
     const location = useRef(null)
-    const customer = localStorage.getItem("kennel_customer", "")
-    const customerInt = parseInt(customer)
+    const customer = useRef(null)
+    const breed = useRef(null)
+
 
     /*
         Get animal state and location state on initialization.
     */
     useEffect(() => {
-       getAnimals().then(getLocations)
+       getLocations()
+       getCustomers()
     }, [])
 
     const constructNewAnimal = () => {
@@ -36,8 +37,10 @@ export const AnimalForm = (props) => {
         } else {
             addAnimal({
                 name: name.current.value,
-                locationId,
-                customerId: customerInt
+                locationId: parseInt(location.current.value),
+                customerId: parseInt(customer.current.value),
+                breed: breed.current.value,
+                treatment: ""
             })
             .then(() => props.history.push("/animals"))
         }
@@ -54,12 +57,31 @@ export const AnimalForm = (props) => {
             </fieldset>
             <fieldset>
                 <div className="form-group">
+                    <label htmlFor="animalBreed">Breed </label>
+                    <input type="text" id="animalBreed" ref={breed} required autoFocus className="form-control" placeholder="Breed" />
+                </div>
+            </fieldset>
+            <fieldset>
+                <div className="form-group">
                     <label htmlFor="location">Assign to location: </label>
                     <select defaultValue="" name="location" ref={location} id="animalLocation" className="form-control" >
                         <option value="0">Select a location</option>
                         {locations.map(e => (
                             <option key={e.id} value={e.id}>
                                 {e.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </fieldset>
+            <fieldset>
+                <div className="form-group">
+                    <label htmlFor="customer">Brought In By: </label>
+                    <select defaultValue="" name="location" ref={customer} className="form-control" >
+                        <option value="0">Select a Customer</option>
+                        {customers.map(customer => (
+                            <option key={customer.id} value={customer.id}>
+                                {customer.name}
                             </option>
                         ))}
                     </select>

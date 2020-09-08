@@ -24,9 +24,15 @@ export const ApplicationViews = (props) => {
       <AnimalProvider>
         <LocationProvider>
           <CustomerProvider>
-            <Route path="/animals">
+            <Route exact path="/animals">
               <AnimalList {...props} />
             </Route>
+
+            <Route
+              exact
+              path="/animals/create"
+              render={(props) => <AnimalForm {...props} />}
+            />
           </CustomerProvider>
         </LocationProvider>
       </AnimalProvider>
@@ -45,12 +51,6 @@ export const ApplicationViews = (props) => {
               exact
               path="/employees/create"
               render={(props) => <EmployeeForm {...props} />}
-            />
-
-            <Route
-              exact
-              path="/animals/create"
-              render={(props) => <AnimalForm {...props} />}
             />
           </AnimalProvider>
         </LocationProvider>
