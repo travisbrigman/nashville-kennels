@@ -1,15 +1,35 @@
 import React, { useState, useContext, useEffect } from "react"
 import { AnimalContext } from "./AnimalProvider"
-import Animal from "./Animal"
+import  Animal  from "./Animal"
 import "./Animals.css"
 
 export const AnimalList = ({ history }) => {
-    const { getAnimals, animals } = useContext(AnimalContext)
+    const { animals, searchTerms, getAnimals } = useContext(AnimalContext)
 
-    // Initialization effect hook -> Go get animal data
-    useEffect(()=>{
+    /*
+        Since you are no longer ALWAYS going to be displaying all animals
+    */
+    const [ filteredAnimals, setFiltered ] = useState([])
+
+    useEffect(() => {
         getAnimals()
     }, [])
+
+    /*
+        This effect hook function will run when the following two state changes happen:
+            1. The animal state changes. First when it is created, then once you get the animals from the API
+            2. When the search terms change, which happens when the user types something in the AnimalSearch component
+    */
+    useEffect(() => {
+        if (searchTerms !== "") {
+            // If the search field is not blank, display matching animals
+            const subset = animals.filter(animal => animal.name.toLowerCase().includes(searchTerms))
+            setFiltered(subset)
+        } else {
+            // If the search field is blank, display all animals
+            setFiltered(animals)
+        }
+    }, [searchTerms, animals])
 
     return (
         <>
@@ -20,7 +40,7 @@ export const AnimalList = ({ history }) => {
             </button>
             <div className="animals">
                 {
-                    animals.map(animal => {
+                    filteredAnimals.map(animal => {
                         return <Animal key={animal.id} animal={animal} />
                     })
                 }
@@ -28,44 +48,3 @@ export const AnimalList = ({ history }) => {
         </>
     )
 }
-/*
-import React, { useContext, useEffect } from "react"
-import { Animal } from "./Animal"
-import "./Animals.css"
-import { AnimalContext } from "./AnimalProvider"
-import { LocationContext } from "../location/LocationProvider"
-import { CustomerContext } from "../customer/CustomerProvider"
-
-
-export const AnimalList = (props) => {
-    // This state changes when `getAnimals()` is invoked below
-    const { animals, getAnimals } = useContext(AnimalContext)
-    const { locations, getLocations } = useContext(LocationContext)
-    const { customers, getCustomers } = useContext(CustomerContext)
-
-    useEffect(() => {
-        getAnimals()
-        getLocations()
-        getCustomers()
-    },[])
-
-    return (
-        <div className="animals">
-            <button onClick={() => props.history.push("/animals/create")}>
-                Make Appointment
-            </button>
-        {
-            animals.map(animalObject => {
-                const owner = customers.find(c => c.id === animalObject.customerId) || {}
-                const clinic = locations.find(loc => loc.id === animalObject.locationId) || {}
-                
-              return <Animal key={animalObject.id} 
-                            animal={animalObject} 
-                            location={clinic} 
-                            customer={owner} />
-            })
-        }
-        </div>
-    )
-}
-*/

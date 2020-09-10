@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 export default ({ animal }) => (
     <section className="animal">
         <h3 className="animal__name">
-            <Link to={`/animals/${animal.id}`}>
+            <Link to={`/Animals/${animal.id}`}>
                 { animal.name }
             </Link>
         </h3>
@@ -18,12 +18,12 @@ export default ({ animal }) => (
 import React from "react"
 import "./Animals.css"
 
-export const Animal = ({ animal, customer, location }) => (
-    <section className="animal">
-        <h3 className="animal__name">{ animal.name }</h3>
-        <div className="animal__breed">{ animal.breed }</div>
-        <div className="animal__location">{ location.name }</div>
-        <div className="animal__owner">{ customer.name }</div>
+export const Animal = ({ Animal, customer, location }) => (
+    <section className="Animal">
+        <h3 className="Animal__name">{ Animal.name }</h3>
+        <div className="Animal__breed">{ Animal.breed }</div>
+        <div className="Animal__location">{ location.name }</div>
+        <div className="Animal__owner">{ customer.name }</div>
     </section>
 )
 */
