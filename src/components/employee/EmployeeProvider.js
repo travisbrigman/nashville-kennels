@@ -9,6 +9,12 @@ export const EmployeeContext = React.createContext();
 export const EmployeeProvider = (props) => {
   const [employees, setEmployees] = useState([]);
 
+  const releaseEmployee = (employeeId) => {
+    return fetch(`http://localhost:8088/employees/${employeeId}`, {
+      method: "DELETE",
+    }).then(getEmployees);
+  };
+
   const getEmployees = () => {
     return fetch("http://localhost:8088/employees")
       .then((res) => res.json())
@@ -31,6 +37,7 @@ export const EmployeeProvider = (props) => {
         employees,
         addEmployee,
         getEmployees,
+        releaseEmployee
       }}
     >
       {props.children}
