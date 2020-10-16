@@ -1,38 +1,20 @@
 import React, { useState, useEffect, useContext } from "react";
-import { AnimalContext } from "../animal/AnimalProvider";
-import { LocationContext } from "../location/LocationProvider";
 import { EmployeeContext } from "./EmployeeProvider";
 import "./Employees.css";
 
 export const EmployeeDetail = (props) => {
-  const { animals, getAnimals } = useContext(AnimalContext);
-  const { locations, getLocations } = useContext(LocationContext);
-  const { employees, getEmployees, releaseEmployee } = useContext(EmployeeContext);
 
-  const [animal, setAnimal] = useState({});
-  const [employee, setEmployee] = useState({});
-  const [location, setLocation] = useState({});
+  const { releaseEmployee, getEmployeeById } = useContext(EmployeeContext);
+
+  const [employee, setEmployee] = useState({location:{name: ""}});
 
   useEffect(() => {
-    getEmployees().then(getAnimals).then(getLocations);
+    const employeeId = parseInt(props.match.params.employeeId);
+    getEmployeeById(employeeId).then(
+    setEmployee
+    )
   }, []);
 
-  useEffect(() => {
-    const animal = animals.find((a) => a.id === employee.animalId) || {};
-    setAnimal(animal);
-  }, [animals]);
-
-  useEffect(() => {
-    const employee =
-      employees.find((e) => e.id === parseInt(props.match.params.employeeId)) ||
-      {};
-    setEmployee(employee);
-  }, [employees]);
-
-  useEffect(() => {
-    const location = locations.find((l) => l.id === employee.locationId) || {};
-    setLocation(location);
-  }, [locations]);
 
   return (
     <section className="employee">
@@ -41,7 +23,7 @@ export const EmployeeDetail = (props) => {
       <div>
         {employee.animalId === null
           ? "Not assigned to an animal"
-          : `Currently taking care of ${animal.name}`}
+          : `Currently taking care of ${employee.name}`}
       </div>
       <button
         className="btn--release"

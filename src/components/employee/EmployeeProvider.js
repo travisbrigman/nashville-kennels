@@ -20,6 +20,11 @@ export const EmployeeProvider = (props) => {
       .then((res) => res.json())
       .then(setEmployees);
   };
+  
+  const getEmployeeById = (employeeId) => {
+    return fetch(`http://localhost:8088/employees/${employeeId}`)
+      .then((res) => res.json())
+  };
 
   const addEmployee = (employee) => {
     return fetch("http://localhost:8088/employees", {
@@ -37,7 +42,8 @@ export const EmployeeProvider = (props) => {
         employees,
         addEmployee,
         getEmployees,
-        releaseEmployee
+        releaseEmployee,
+        getEmployeeById
       }}
     >
       {props.children}
